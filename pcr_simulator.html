@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="./">
+    <title></title>
+
+<script>
+    function round(value,digits) { return Math.round(value * 10**digits)/10**digits;}
+    function prod_rate(Cycles, D_Temp, D_Time, A_Temp, A_Time, E_Temp, E_Time) { 
+    return round((-2925 
+    + 76.75 * Cycles 
+    + 0.095 * D_Temp 
+    + 11.89 * A_Temp 
+    + 71.8 *  E_Temp 
+    - 5.93 * D_Time
+    - 7.28 * A_Time 
+    + 7.96 * E_Time 
+    - 2.164 * Cycles*Cycles 
+    - 0.1947 * A_Temp*A_Temp
+    - 0.743 * E_Temp*E_Temp 
+    + 0.0380 * D_Time*D_Time 
+    - 0.1481 * A_Time*A_Time
+    + 0.2002 * Cycles*E_Temp 
+    - 0.0641 * Cycles*D_Time 
+    - 0.0811 * Cycles*A_Time
+    - 0.2147 * Cycles*E_Time 
+    + 0.1711 * A_Temp*E_Temp 
+    - 0.0243 * A_Temp*A_Time
+    - 0.0153 * A_Temp*E_Time 
+    + 0.0501 * E_Temp*D_Time 
+    + 0.3307 * E_Temp*A_Time
+    - 0.0465 * E_Temp*E_Time 
+    - 0.02991 * A_Time*E_Time) * (1 + 5 * (Math.random()-0.5)/ 100), 2);
+    }
+    function simulate() {
+        const form = new FormData(document.getElementById("pcr_sim"));
+
+        let [Cycles, D_Temp, A_Temp, E_Temp, D_Time, A_Time, E_Time] = form.values();
+        console.log(form.keys());
+
+        for (const pair of form.entries()) {
+          console.log(pair[0], pair[1]);
+        }
+
+        document.getElementById("production_rate").innerHTML = prod_rate(Cycles, D_Temp, A_Temp, E_Temp, D_Time, A_Time, E_Time);
+
+    }
+</script> 
+</head><body><form id="pcr_sim">
+<table>
+<tbody>
+<tr>
+<th>No. of cycles</th>
+<td><input id="id_cycles" max="100" min="1" name="cycles" type="number" value="15"></td>
+</tr>
+<tr>
+<th>Denaturation</th>
+<td><input id="id_denaturation_temperature" max="100" min="1" name="denaturation_temperature" step="any" type="number" value="80"> °C for <span id="errors_denaturation_duration"></span> <input id="id_denaturation_duration" min="1" name="denaturation_duration" step="any" type="number" value="10"> sec.</td>
+</tr>
+<tr>
+<th>Annealing</th>
+<td><input id="id_annealing_temperature" max="100" min="1" name="annealing_temperature" step="any" type="number" value="68"> °C for <span id="errors_annealing_duration"></span> <input id="id_annealing_duration" min="1" name="annealing_duration" step="any" type="number" value="10"> sec.</td>
+</tr>
+<tr>
+<th>Extension</th>
+<td><input id="id_extension_temperature" max="100" min="1" name="extension_temperature" step="any" type="number" value="54"> °C for <span id="errors_extension_duration"></span> <input id="id_extension_duration" min="1" name="extension_duration" step="any" type="number" value="20"> sec.</td>
+</tr>
+<tr>
+<th>Result</th>
+<td id="production_rate"></td>
+</tr>
+</tbody>
+</table>
+<input type="button" value="Run PCR" onclick="simulate()"></form></body></html>
